@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Passion Test Siswa</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body { font-family: Arial, sans-serif; background:#f5f7fa; margin:0; padding:0; }
+    .container { max-width: 800px; margin: 40px auto; background: #fff; padding: 30px; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+    h1 { text-align: center; }
+    .question { margin-bottom: 25px; }
+    .question h3 { margin-bottom: 10px; }
+    label { display: block; margin: 6px 0; cursor: pointer; }
+    button { background:#2563eb; color:#fff; border:none; padding:12px 20px; border-radius:8px; font-size:16px; cursor:pointer; }
+    button:hover { background:#1e4ed8; }
+    #result { margin-top:40px; display:none; }
+    canvas { max-width: 100%; }
+  </style>
+</head>
+<body>
+  <header style="text-align:center; padding:20px 0;">
+    <img src="Prodi KWU.png" alt="Entrepreneurship Study Program" style="max-width:90%; height:auto;">
+  </header>
+  <div class="container">
+    <h1>Passion Test Siswa</h1>
+    <p>Pilih satu jawaban yang paling menggambarkan diri kamu.</p>
+
+    <form id="passionForm">
+
+      <!-- QUESTIONS -->
+      <div id="questions"></div>
+
+      <button type="submit">Lihat Hasil</button>
+    </form>
+
+    <div id="result">
+      <h2>Hasil Passion Kamu</h2>
+      <canvas id="chart"></canvas>
+    </div>
+  </div>
+
+<script>
+  const questionsData = [
+    {
+      q: "1. Kalau weekend dan tidak ada tugas, kamu paling sering…",
+      options: [
+        { text: "Coba tempat makan baru / jajan hits", map: "A" },
+        { text: "Scroll IG/TikTok cari outfit atau style", map: "B" },
+        { text: "Main game atau explore teknologi", map: "C" },
+        { text: "Self-care, skincare, atau olahraga", map: "D" },
+        { text: "Nonton konten edukasi / bantu teman belajar", map: "E" }
+      ]
+    },
+    {
+      q: "2. Kalau dapat uang tambahan, kamu paling mungkin pakai untuk…",
+      options: [
+        { text: "Kulineran atau makanan viral", map: "A" },
+        { text: "Beli baju, sepatu, atau aksesoris", map: "B" },
+        { text: "Upgrade gadget, game, atau tools digital", map: "C" },
+        { text: "Skincare, vitamin, atau alat olahraga", map: "D" },
+        { text: "Buku, course, atau alat belajar", map: "E" }
+      ]
+    },
+    {
+      q: "3. Konten apa yang paling sering muncul di FYP kamu?",
+      options: [
+        { text: "Food review & street food", map: "A" },
+        { text: "OOTD & fashion inspo", map: "B" },
+        { text: "Gaming, AI, atau startup", map: "C" },
+        { text: "Skincare & healthy lifestyle", map: "D" },
+        { text: "Edu content & life hacks", map: "E" }
+      ]
+    },
+    {
+      q: "4. Kalau nongkrong bareng teman, kamu biasanya yang…",
+      options: [
+        { text: "Pilih tempat makan atau menu", map: "A" },
+        { text: "Ngomentarin outfit atau gaya", map: "B" },
+        { text: "Ngurus playlist, WiFi, atau gadget", map: "C" },
+        { text: "Ingatkan soal kesehatan atau capek", map: "D" },
+        { text: "Jadi tempat curhat / penjelas", map: "E" }
+      ]
+    },
+    {
+      q: "5. Kalau disuruh bikin konten, kamu paling excited bikin…",
+      options: [
+        { text: "Konten kuliner", map: "A" },
+        { text: "Konten fashion / styling", map: "B" },
+        { text: "Konten teknologi / game", map: "C" },
+        { text: "Konten skincare / wellness", map: "D" },
+        { text: "Konten edukasi", map: "E" }
+      ]
+    },
+    {
+      q: "6. Menurut teman-temanmu, kamu itu tipe yang…",
+      options: [
+        { text: "Paling tahu makanan enak", map: "A" },
+        { text: "Paling stylish", map: "B" },
+        { text: "Paling jago teknologi", map: "C" },
+        { text: "Paling peduli kesehatan", map: "D" },
+        { text: "Paling sabar & komunikatif", map: "E" }
+      ]
+    },
+    {
+      q: "7. Kalau ikut event, kamu paling tertarik ke booth…",
+      options: [
+        { text: "Makanan & minuman", map: "A" },
+        { text: "Fashion & brand lokal", map: "B" },
+        { text: "Teknologi & startup", map: "C" },
+        { text: "Health, beauty, fitness", map: "D" },
+        { text: "Edukasi & self-development", map: "E" }
+      ]
+    },
+    {
+      q: "8. Aktivitas mana yang bikin kamu lupa waktu?",
+      options: [
+        { text: "Masak / nonton food content", map: "A" },
+        { text: "Mix & match outfit / desain", map: "B" },
+        { text: "Main game / coding", map: "C" },
+        { text: "Workout / skincare", map: "D" },
+        { text: "Ngajar / diskusi", map: "E" }
+      ]
+    },
+    {
+      q: "9. Kalau punya akun besar di IG/TikTok, kamu ingin dikenal karena…",
+      options: [
+        { text: "Konten kuliner", map: "A" },
+        { text: "Style & fashion", map: "B" },
+        { text: "Tech / gaming", map: "C" },
+        { text: "Healthy lifestyle", map: "D" },
+        { text: "Edu content", map: "E" }
+      ]
+    },
+    {
+      q: "10. Aktivitas apa yang paling ingin kamu lakukan jika punya banyak waktu?",
+      options: [
+        { text: "Eksperimen makanan", map: "A" },
+        { text: "Menciptakan desain", map: "B" },
+        { text: "Mengembangkan ide digital", map: "C" },
+        { text: "Menjaga kesehatan & penampilan", map: "D" },
+        { text: "Berbagi pengetahuan", map: "E" }
+      ]
+    }
+  ];
+
+  function shuffle(array) {
+    return array.sort(() => Math.random() - 0.5);
+  }
+
+  const container = document.getElementById('questions');
+  questionsData.forEach((item, index) => {
+    const qDiv = document.createElement('div');
+    qDiv.className = 'question';
+    qDiv.innerHTML = `<h3>${item.q}</h3>`;
+
+    const shuffledOptions = [...item.options].sort(() => Math.random() - 0.5);
+
+    shuffledOptions.forEach(opt => {
+      qDiv.innerHTML += `
+        <label>
+          <input type="radio" name="q${index}" value="${opt.map}" required>
+          ${opt.text}
+        </label>`;
+    });
+
+    container.appendChild(qDiv);
+  });
+
+  document.getElementById('passionForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const scores = { Culinary:0, Fashion:0, Techno:0, Health:0, Edu:0 };
+    const map = { A:'Culinary', B:'Fashion', C:'Techno', D:'Health', E:'Edu' };
+
+    questionsData.forEach((_, i) => {
+      const answer = document.querySelector(`input[name=q${i}]:checked`).value;
+      scores[map[answer]]++;
+    });
+
+    const data = Object.values(scores).map(v => Math.round((v / questionsData.length) * 100));
+    document.getElementById('result').style.display = 'block';
+
+    new Chart(document.getElementById('chart'), {
+      type: 'bar',
+      data: {
+        labels: ['Culinary Art', 'Fashion & Innovation', 'Technopreneur', 'Health & Beauty', 'Edupreneur'],
+        datasets: [{ data }]
+      },
+      options: { scales: { y: { beginAtZero: true, max: 100 } } }
+    });
+  });
+</script>
+  <footer style="text-align:center; margin:60px 0 20px;">
+    <img src="One Degree one Startup.png" alt="One Degree One Startup" style="max-width:80%; height:auto;">
+  </footer>
+</body>
+</html>

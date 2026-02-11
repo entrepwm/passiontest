@@ -21,7 +21,7 @@ header img { display:block; margin:0 auto; }
 </head>
 <body>
   <header style="text-align:center; padding:6px 0 0; margin-bottom:0;">
-    <img src="1.png" alt="Entrepreneurship Study Program" style="max-width:90%; height:auto;">
+    <img src="Prodi KWU.png" alt="Entrepreneurship Study Program" style="max-width:90%; height:auto;">
   </header>
   <div class="container" style="margin-top:0;">
     <h1>Passion Test Siswa</h1>
@@ -160,18 +160,17 @@ header img { display:block; margin:0 auto; }
   ];
 
   function shuffle(array) {
-    return array.sort(() => Math.random() - 0.5);
+    return [...array].sort(() => Math.random() - 0.5);
   }
 
   const container = document.getElementById('questions');
+
   questionsData.forEach((item, index) => {
     const qDiv = document.createElement('div');
     qDiv.className = 'question';
     qDiv.innerHTML = `<h3>${item.q}</h3>`;
 
-    const shuffledOptions = [...item.options].sort(() => Math.random() - 0.5);
-
-    shuffledOptions.forEach(opt => {
+    shuffle(item.options).forEach(opt => {
       qDiv.innerHTML += `
         <label>
           <input type="radio" name="q${index}" value="${opt.map}" required>
@@ -183,47 +182,29 @@ header img { display:block; margin:0 auto; }
   });
 
   document.getElementById('passionForm').addEventListener('submit', function(e) {
-  e.preventDefault();
+    e.preventDefault();
 
-  const scores = { Culinary:0, Fashion:0, Techno:0, Health:0, Edu:0 };
-  const map = { A:'Culinary', B:'Fashion', C:'Techno', D:'Health', E:'Edu' };
+    const scores = { Culinary:0, Fashion:0, Techno:0, Health:0, Edu:0 };
+    const map = { A:'Culinary', B:'Fashion', C:'Techno', D:'Health', E:'Edu' };
 
-  questionsData.forEach((_, i) => {
-    const answer = document.querySelector(`input[name=q${i}]:checked`).value;
-    scores[map[answer]]++;
-  });
+    questionsData.forEach((_, i) => {
+      const answer = document.querySelector(`input[name=q${i}]:checked`).value;
+      scores[map[answer]]++;
+    });
 
-  /* ===============================
-     SAVE DATA TO GOOGLE SHEETS
-     =============================== */
-  fetch('https://script.google.com/macros/s/AKfycbyWhaNFLabF6i6skm4RX1DUCsYyp6B3I0ieBKeg37_Yf2Hj1Mzg-st56Xnqqk-wwubbzw/exec', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-      nama: document.querySelector('input[name="nama"]').value,
-      hp: document.querySelector('input[name="hp"]').value,
-      Culinary: scores.Culinary,
-      Fashion: scores.Fashion,
-      Techno: scores.Techno,
-      Health: scores.Health,
-      Edu: scores.Edu
-    })
-  }).catch(err => console.error('Failed to save data', err));
-
-  const data = Object.values(scores).map(v => Math.round((v / questionsData.length) * 100));
-  document.getElementById('result').style.display = 'block';
-
-  new Chart(document.getElementById('chart'), {
-    type: 'bar',
-    data: {
-      labels: ['Culinary Art', 'Fashion & Innovation', 'Technopreneur', 'Health & Beauty', 'Edupreneur'],
-      datasets: [{ data }]
-    },
-    options: { scales: { y: { beginAtZero: true, max: 100 } } }
-  });
-});
+    fetch('https://script.google.com/macros/s/AKfycbyWhaNFLabF6i6skm4RX1DUCsYyp6B3I0ieBKeg37_Yf2Hj1Mzg-st56Xnqqk-wwubbzw/exec', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        nama: document.querySelector('input[name="nama"]').value,
+        hp: document.querySelector('input[name="hp"]').value,
+        Culinary: scores.Culinary,
+        Fashion: scores.Fashion,
+        Techno: scores.Techno,
+        Health: scores.Health,
+        Edu: scores.Edu
+      })
+    });
 
     const data = Object.values(scores).map(v => Math.round((v / questionsData.length) * 100));
     document.getElementById('result').style.display = 'block';
@@ -239,7 +220,7 @@ header img { display:block; margin:0 auto; }
   });
 </script>
   <footer style="text-align:center; margin:60px 0 20px;">
-    <img src="2.png" alt="One Degree One Startup" style="max-width:80%; height:auto;">
+    <img src="One Degree one Startup.png" alt="One Degree One Startup" style="max-width:80%; height:auto;">
   </footer>
 </body>
 </html>

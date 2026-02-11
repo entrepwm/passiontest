@@ -1,131 +1,91 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Passion Test Siswa</title>
-
+<meta charset="UTF-8">
+<title>Passion Test</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
 <style>
-body { font-family: Arial, sans-serif; background:#f5f7fa; margin:0; }
-header img, footer img { display:block; margin:0 auto; }
-.container {
-  max-width:800px;
-  margin:10px auto 40px;
-  background:#fff;
-  padding:30px;
-  border-radius:12px;
-  box-shadow:0 10px 30px rgba(0,0,0,.1);
-}
-.question { margin-bottom:25px; }
-label { display:block; margin:6px 0; cursor:pointer; }
-button {
-  background:#2563eb; color:#fff; border:none;
-  padding:12px 20px; border-radius:8px; font-size:16px;
-}
+body{font-family:Arial;background:#f5f7fa;margin:0}
+.container{max-width:800px;margin:10px auto;background:#fff;padding:30px;border-radius:12px}
+.question{margin-bottom:25px}
+label{display:block;margin:6px 0}
+button{padding:12px 20px;background:#2563eb;color:#fff;border:none;border-radius:8px}
 </style>
 </head>
 
 <body>
 
-<header style="padding:6px 0;">
-  <img src="1.png" style="max-width:90%;">
-</header>
+<header><img src="1.png" style="max-width:90%;display:block;margin:auto"></header>
 
 <div class="container">
-<h1 style="text-align:center;">Passion Test Siswa</h1>
-<p>Pilih satu jawaban yang paling menggambarkan diri kamu.</p>
+<h2>Passion Test Siswa</h2>
 
-<form id="passionForm">
+<form id="form">
 
-<!-- DATA DIRI -->
-<div class="question">
-  <h3>Data Diri</h3>
-  <input name="nama" placeholder="Nama Lengkap" required style="width:100%;padding:10px"><br><br>
-  <input name="email" type="email" placeholder="Email" required style="width:100%;padding:10px"><br><br>
-  <input name="hp" placeholder="Nomor HP / WhatsApp" required style="width:100%;padding:10px">
-</div>
+<input name="nama" placeholder="Nama" required><br><br>
+<input name="email" placeholder="Email" required><br><br>
+<input name="hp" placeholder="HP" required><br><br>
 
-<!-- QUESTIONS -->
 <div id="questions"></div>
 
 <button type="submit">Lihat Hasil</button>
 </form>
 
-<div id="result" style="display:none;margin-top:40px;">
-  <h2>Hasil Passion Kamu</h2>
-  <canvas id="chart"></canvas>
-</div>
+<canvas id="chart" style="margin-top:40px"></canvas>
 </div>
 
-<footer style="margin:40px 0;">
-  <img src="2.png" style="max-width:80%;">
-</footer>
+<footer><img src="2.png" style="max-width:80%;display:block;margin:auto"></footer>
 
 <script>
-const questionsData = [
-  { q:"1. Kalau weekend kamu paling sering…", o:["Kulineran","Fashion","Gaming","Olahraga","Belajar"] },
-  { q:"2. Uang tambahan paling sering buat…", o:["Makan","Baju","Gadget","Skincare","Buku"] },
-  { q:"3. FYP kamu isinya…", o:["Food","OOTD","Tech","Health","Edu"] },
-  { q:"4. Di tongkrongan kamu biasanya…", o:["Cari makan","Komentarin style","Ngurus gadget","Ingatkan sehat","Jadi penjelas"] },
-  { q:"5. Konten favorit kamu…", o:["Kuliner","Fashion","Tech","Wellness","Edukasi"] },
-  { q:"6. Kata teman kamu itu…", o:["Food hunter","Stylish","Techy","Healthy","Komunikatif"] },
-  { q:"7. Booth favorit di event…", o:["F&B","Fashion","Startup","Health","Education"] },
-  { q:"8. Yang bikin lupa waktu…", o:["Masak","Mix outfit","Game","Workout","Diskusi"] },
-  { q:"9. Mau dikenal sebagai…", o:["Food creator","Fashion creator","Tech creator","Health creator","Edu creator"] },
-  { q:"10. Kalau bebas mau ngapain…", o:["Eksperimen makanan","Desain","Bangun app","Self care","Ngajar"] }
+const questions = [
+ {q:"1. Weekend kamu paling suka?", A:"Kuliner",B:"Fashion",C:"Game",D:"Olahraga",E:"Belajar"},
+ {q:"2. Uang tambahan buat?", A:"Makan",B:"Baju",C:"Gadget",D:"Skincare",E:"Buku"},
+ {q:"3. FYP kamu?", A:"Food",B:"OOTD",C:"Tech",D:"Health",E:"Edu"},
+ {q:"4. Di tongkrongan kamu?", A:"Cari makan",B:"Style",C:"Gadget",D:"Sehat",E:"Ngajar"},
+ {q:"5. Konten favorit?", A:"Kuliner",B:"Fashion",C:"Tech",D:"Wellness",E:"Edukasi"},
+ {q:"6. Kata teman?", A:"Foodie",B:"Stylish",C:"Techy",D:"Healthy",E:"Tutor"},
+ {q:"7. Booth favorit?", A:"F&B",B:"Fashion",C:"Startup",D:"Health",E:"Edu"},
+ {q:"8. Lupa waktu saat?", A:"Masak",B:"Desain",C:"Game",D:"Workout",E:"Diskusi"},
+ {q:"9. Mau dikenal sebagai?", A:"Food",B:"Style",C:"Tech",D:"Health",E:"Edu"},
+ {q:"10. Paling ingin lakukan?", A:"Masak",B:"Design",C:"App",D:"Self care",E:"Ngajar"}
 ];
 
-const map = ["Culinary","Fashion","Techno","Health","Edu"];
+const map={A:"Culinary",B:"Fashion",C:"Techno",D:"Health",E:"Edu"};
+const qBox=document.getElementById("questions");
 
-function shuffle(a){return [...a].sort(()=>Math.random()-0.5);}
-
-const qBox = document.getElementById("questions");
-
-questionsData.forEach((q,i)=>{
-  let html = `<div class="question"><h3>${q.q}</h3>`;
-  shuffle(q.o).forEach((opt,idx)=>{
-    html += `<label>
-      <input type="radio" name="q${i}" value="${map[idx]}" required> ${opt}
-    </label>`;
+questions.forEach((q,i)=>{
+  let h=`<div class="question"><b>${q.q}</b>`;
+  ["A","B","C","D","E"].sort(()=>Math.random()-0.5).forEach(k=>{
+    h+=`<label><input type="radio" name="q${i}" value="${k}" required> ${q[k]}</label>`;
   });
-  html += `</div>`;
-  qBox.innerHTML += html;
+  h+="</div>";
+  qBox.innerHTML+=h;
 });
 
-document.getElementById("passionForm").addEventListener("submit", e=>{
+document.getElementById("form").onsubmit=e=>{
   e.preventDefault();
 
   let score={Culinary:0,Fashion:0,Techno:0,Health:0,Edu:0};
-  questionsData.forEach((_,i)=>{
+  questions.forEach((_,i)=>{
     const v=document.querySelector(`input[name=q${i}]:checked`).value;
-    score[v]++;
+    score[map[v]]++;
   });
 
   fetch("https://script.google.com/macros/s/AKfycbyWhaNFLabF6i6skm4RX1DUCsYyp6B3I0ieBKeg37_Yf2Hj1Mzg-st56Xnqqk-wwubbzw/exec",{
     method:"POST",
-    headers:{ "Content-Type":"application/json" },
+    headers:{'Content-Type':'text/plain'},
     body:JSON.stringify({
-      nama:passionForm.nama.value,
-      email:passionForm.email.value,
-      hp:passionForm.hp.value,
+      nama:form.nama.value,
+      email:form.email.value,
+      hp:form.hp.value,
       ...score
     })
   });
 
-  document.getElementById("result").style.display="block";
-
-  new Chart(chart,{
-    type:"bar",
-    data:{
-      labels:Object.keys(score),
-      datasets:[{data:Object.values(score).map(v=>v*10)}]
-    },
-    options:{scales:{y:{beginAtZero:true,max:100}}}
-  });
-});
+  new Chart(chart,{type:"bar",data:{labels:Object.keys(score),datasets:[{data:Object.values(score).map(v=>v*10)}]}});
+};
 </script>
 
 </body>
 </html>
+

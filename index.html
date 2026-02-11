@@ -193,18 +193,22 @@ header img { display:block; margin:0 auto; }
     });
 
     fetch('https://script.google.com/macros/s/AKfycbyWhaNFLabF6i6skm4RX1DUCsYyp6B3I0ieBKeg37_Yf2Hj1Mzg-st56Xnqqk-wwubbzw/exec', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        nama: document.querySelector('input[name="nama"]').value,
-        hp: document.querySelector('input[name="hp"]').value,
-        Culinary: scores.Culinary,
-        Fashion: scores.Fashion,
-        Techno: scores.Techno,
-        Health: scores.Health,
-        Edu: scores.Edu
-      })
-    });
+  method: 'POST',
+  mode: 'no-cors',
+  headers: {
+    'Content-Type': 'text/plain'
+  },
+  body: JSON.stringify({
+    nama: document.querySelector('input[name=\"nama\"]').value,
+    hp: document.querySelector('input[name=\"hp\"]').value,
+    Culinary: scores.Culinary,
+    Fashion: scores.Fashion,
+    Techno: scores.Techno,
+    Health: scores.Health,
+    Edu: scores.Edu
+  })
+});
+
 
     const data = Object.values(scores).map(v => Math.round((v / questionsData.length) * 100));
     document.getElementById('result').style.display = 'block';

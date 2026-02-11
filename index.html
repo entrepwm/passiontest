@@ -285,11 +285,31 @@ fetch('https://script.google.com/macros/s/AKfycbxGuTXptdkrayfZehI2vsHQsuxKaXoNjV
 });
 
   document.getElementById('result').style.display='block';
-  new Chart(chart,{type:'bar',data:{
-    labels:Object.keys(scores),
-    datasets:[{data:Object.values(scores).map(v=>v*10)}]
-  },options:{scales:{y:{beginAtZero:true,max:100}}}});
-};
+  new Chart(chart, {
+  type: 'bar',
+  data: {
+    labels: Object.keys(scores),
+    datasets: [{
+      data: Object.values(scores).map(v => v * 10),
+      backgroundColor: '#2563eb'
+    }]
+  },
+  options: {
+    plugins: {
+      legend: {display: false},
+      tooltip: {
+        callbacks: {
+          label: function(context) {
+            return context.parsed.y + '%';
+    },
+    scales: {
+      y: {
+        beginAtZero: true,
+        max: 100
+      }
+    }
+  }
+});
 </script>
 
 </body>

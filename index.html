@@ -258,6 +258,16 @@ document.getElementById('passionForm').onsubmit=e=>{
     scores[map[document.querySelector(`input[name="q${i}"]:checked`).value]]++;
   });
 
+const formData = new URLSearchParams();
+formData.append('nama', document.querySelector('input[name="nama"]').value);
+formData.append('email', document.querySelector('input[name="email"]').value);
+formData.append('hp', document.querySelector('input[name="hp"]').value);
+formData.append('Culinary', scores.Culinary);
+formData.append('Fashion', scores.Fashion);
+formData.append('Techno', scores.Techno);
+formData.append('Health', scores.Health);
+formData.append('Edu', scores.Edu);
+  
 fetch('https://script.google.com/macros/s/AKfycbxHCguOKiSGOgHo3lSLBbdSSgjd7GsUEPgOu6ZvU7_CsU8dnZVgRxCud7BtPySZKm4-Zg/exec', {
   method: 'POST',
   mode: 'no-cors',

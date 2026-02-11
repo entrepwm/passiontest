@@ -63,38 +63,47 @@
 </footer>
 
 <script>
-const questionsData = [
-  { q:"1. Kalau weekend dan tidak ada tugas, kamu paling sering…", options:[{text:"Coba tempat makan baru / jajan hits",map:"A"},{text:"Scroll IG/TikTok cari outfit",map:"B"},{text:"Main game / eksplor teknologi",map:"C"},{text:"Self-care / olahraga",map:"D"},{text:"Nonton konten edukasi",map:"E"}]},
-  { q:"2. Kalau dapat uang tambahan, kamu paling mungkin pakai untuk…", options:[{text:"Kulineran",map:"A"},{text:"Belanja fashion",map:"B"},{text:"Upgrade gadget",map:"C"},{text:"Skincare / vitamin",map:"D"},{text:"Buku / course",map:"E"}]},
-  { q:"3. Konten apa yang paling sering muncul di FYP kamu?", options:[{text:"Food review",map:"A"},{text:"OOTD",map:"B"},{text:"Gaming / AI",map:"C"},{text:"Healthy lifestyle",map:"D"},{text:"Edu content",map:"E"}]},
-  { q:"4. Kalau nongkrong bareng teman, kamu biasanya yang…", options:[{text:"Pilih tempat makan",map:"A"},{text:"Komentari outfit",map:"B"},{text:"Ngurus gadget",map:"C"},{text:"Ingatkan kesehatan",map:"D"},{text:"Tempat curhat",map:"E"}]},
-  { q:"5. Kalau disuruh bikin konten, kamu paling excited bikin…", options:[{text:"Konten kuliner",map:"A"},{text:"Konten fashion",map:"B"},{text:"Konten teknologi",map:"C"},{text:"Konten wellness",map:"D"},{text:"Konten edukasi",map:"E"}]},
-  { q:"6. Menurut temanmu, kamu itu tipe yang…", options:[{text:"Paling tahu makanan enak",map:"A"},{text:"Paling stylish",map:"B"},{text:"Paling tech-savvy",map:"C"},{text:"Paling peduli kesehatan",map:"D"},{text:"Paling sabar & komunikatif",map:"E"}]},
-  { q:"7. Kalau ikut event, kamu tertarik ke booth…", options:[{text:"Makanan",map:"A"},{text:"Fashion",map:"B"},{text:"Teknologi",map:"C"},{text:"Health & beauty",map:"D"},{text:"Edukasi",map:"E"}]},
-  { q:"8. Aktivitas yang bikin kamu lupa waktu?", options:[{text:"Masak / food content",map:"A"},{text:"Mix & match outfit",map:"B"},{text:"Game / coding",map:"C"},{text:"Workout",map:"D"},{text:"Diskusi / ngajar",map:"E"}]},
-  { q:"9. Kalau terkenal di sosmed, kamu ingin dikenal karena…", options:[{text:"Kuliner",map:"A"},{text:"Fashion",map:"B"},{text:"Tech",map:"C"},{text:"Healthy lifestyle",map:"D"},{text:"Edu content",map:"E"}]},
-  { q:"10. Aktivitas apa yang paling ingin kamu lakukan jika punya banyak waktu?", options:[{text:"Eksperimen makanan",map:"A"},{text:"Menciptakan desain",map:"B"},{text:"Mengembangkan ide digital",map:"C"},{text:"Menjaga kesehatan",map:"D"},{text:"Berbagi ilmu",map:"E"}]} 
-];
-
-function shuffle(arr){return [...arr].sort(()=>Math.random()-0.5)}
-const qContainer=document.getElementById('questions');
-questionsData.forEach((item,i)=>{
-  const div=document.createElement('div');div.className='question';div.innerHTML=`<h3>${item.q}</h3>`;
-  shuffle(item.options).forEach(opt=>{
-    div.innerHTML+=`<label><input type="radio" name="q${i}" value="${opt.map}" required> ${opt.text}</label>`;
-  });qContainer.appendChild(div);
-});
-
-document.getElementById('passionForm').addEventListener('submit',e=>{
+document.getElementById('passionForm').addEventListener('submit', function(e) {
   e.preventDefault();
-  const scores={Culinary:0,Fashion:0,Techno:0,Health:0,Edu:0};
-  const map={A:'Culinary',B:'Fashion',C:'Techno',D:'Health',E:'Edu'};
-  questionsData.forEach((_,i)=>{scores[map[document.querySelector(`input[name=q${i}]:checked`).value]]++});
 
-  fetch('https://script.google.com/macros/s/AKfycbyWhaNFLabF6i6skm4RX1DUCsYyp6B3I0ieBKeg37_Yf2Hj1Mzg-st56Xnqqk-wwubbzw/exec',{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain'},body:JSON.stringify({nama:document.querySelector('[name=nama]').value,email:document.querySelector('[name=email]').value,hp:document.querySelector('[name=hp]').value,...scores})});
+  const scores = { Culinary:0, Fashion:0, Techno:0, Health:0, Edu:0 };
+  const map = { A:'Culinary', B:'Fashion', C:'Techno', D:'Health', E:'Edu' };
 
-  document.getElementById('result').style.display='block';
-  new Chart(document.getElementById('chart'),{type:'bar',data:{labels:['Culinary Art','Fashion & Innovation','Technopreneur','Health & Beauty','Edupreneur'],datasets:[{data:Object.values(scores).map(v=>Math.round(v/10*100))}]},options:{scales:{y:{beginAtZero:true,max:100}}}});
+  questionsData.forEach((_, i) => {
+    const answer = document.querySelector(`input[name=q${i}]:checked`).value;
+    scores[map[answer]]++;
+  });
+
+  const payload = {
+    nama: document.querySelector('input[name="nama"]').value,
+    email: document.querySelector('input[name="email"]').value,
+    hp: document.querySelector('input[name="hp"]').value,
+    Culinary: scores.Culinary,
+    Fashion: scores.Fashion,
+    Techno: scores.Techno,
+    Health: scores.Health,
+    Edu: scores.Edu
+  };
+
+  fetch('https://script.google.com/macros/s/AKfycbyWhaNFLabF6i6skm4RX1DUCsYyp6B3I0ieBKeg37_Yf2Hj1Mzg-st56Xnqqk-wwubbzw/exec', {
+    method: 'POST',
+    mode: 'no-cors',
+    headers: {
+      'Content-Type': 'application/json' // ✅ CRITICAL FIX
+    },
+    body: JSON.stringify(payload)
+  });
+
+  document.getElementById('result').style.display = 'block';
+
+  new Chart(document.getElementById('chart'), {
+    type: 'bar',
+    data: {
+      labels: ['Culinary Art', 'Fashion & Innovation', 'Technopreneur', 'Health & Beauty', 'Edupreneur'],
+      datasets: [{ data: Object.values(scores).map(v => Math.round(v / 10 * 100)) }]
+    },
+    options: { scales: { y: { beginAtZero: true, max: 100 } } }
+  });
 });
 </script>
 </body>

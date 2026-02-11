@@ -282,8 +282,7 @@ params.append('Edu', scores.Edu);
 fetch('https://script.google.com/macros/s/AKfycbyshZlmYjBty96hjVyp7KkWIlVEltkKbMQb_y-p_P8bHKzP3OtDjqlIRAjtvMg02IcC/exec', {
   method: 'POST',
   body: params,
-})
-    });
+});
 
   document.getElementById('result').style.display='block';
   new Chart(chart,{type:'bar',data:{

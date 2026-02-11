@@ -203,17 +203,15 @@ header img { display:block; margin:0 auto; }
     'Content-Type': 'text/plain'
   },
   body: JSON.stringify({
-    nama: document.querySelector('input[name=\"nama\"]').value,
-    hp: document.querySelector('input[name=\"hp\"]').value,
+    nama: document.querySelector('input[name="nama"]').value,
+    email: document.querySelector('input[name="email"]').value, // ✅ ADD THIS
+    hp: document.querySelector('input[name="hp"]').value,
     Culinary: scores.Culinary,
     Fashion: scores.Fashion,
     Techno: scores.Techno,
     Health: scores.Health,
     Edu: scores.Edu
-  })
-});
-
-
+})
     const data = Object.values(scores).map(v => Math.round((v / questionsData.length) * 100));
     document.getElementById('result').style.display = 'block';
 

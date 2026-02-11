@@ -212,6 +212,7 @@ header img { display:block; margin:0 auto; }
     Health: scores.Health,
     Edu: scores.Edu
 })
+});
     const data = Object.values(scores).map(v => Math.round((v / questionsData.length) * 100));
     document.getElementById('result').style.display = 'block';
 

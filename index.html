@@ -267,13 +267,26 @@ formData.append('Fashion', scores.Fashion);
 formData.append('Techno', scores.Techno);
 formData.append('Health', scores.Health);
 formData.append('Edu', scores.Edu);
+
+const params = new URLSearchParams({
+  nama: document.querySelector('input[name="nama"]').value,
+  email: document.querySelector('input[name="email"]').value,
+  hp: document.querySelector('input[name="hp"]').value,
+  Culinary: scores.Culinary,
+  Fashion: scores.Fashion,
+  Techno: scores.Techno,
+  Health: scores.Health,
+  Edu: scores.Edu
+});
   
-fetch('https://script.google.com/macros/s/AKfycbyr_4BOWn1aa_sXcW7g0AoFSriSUnrGl2wkpxruGx1j9lmaFRjIsoNGX09hr4ELrosiSw/exec', {
+  fetch('https://script.google.com/macros/s/AKfycbyr_4BOWn1aa_sXcW7g0AoFSriSUnrGl2wkpxruGx1j9lmaFRjIsoNGX09hr4ELrosiSw/exec', {
   method: 'POST',
   mode: 'no-cors',
   headers: {
-    'Content-Type': 'text/plain'
+    'Content-Type': 'application/x-www-form-urlencoded'
   },
+  body: params.toString()
+});
   body: JSON.stringify({
     nama: document.querySelector('input[name=\"nama\"]').value,
     email: document.querySelector('input[name=\"email\"]').value,

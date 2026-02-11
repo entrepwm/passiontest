@@ -258,17 +258,23 @@ document.getElementById('passionForm').onsubmit=e=>{
     scores[map[document.querySelector(`input[name="q${i}"]:checked`).value]]++;
   });
 
-  fetch('https://script.google.com/macros/s/AKfycbyWhaNFLabF6i6skm4RX1DUCsYyp6B3I0ieBKeg37_Yf2Hj1Mzg-st56Xnqqk-wwubbzw/exec',{
-    method:'POST',
-    mode:'no-cors',
-    headers:{'Content-Type':'text/plain'},
-    body:JSON.stringify({
-      nama:passionForm.nama.value,
-      email:passionForm.email.value,
-      hp:passionForm.hp.value,
-      ...scores
-    })
-  });
+fetch('https://script.google.com/macros/s/AKfycbyWhaNFLabF6i6skm4RX1DUCsYyp6B3I0ieBKeg37_Yf2Hj1Mzg-st56Xnqqk-wwubbzw/exec', {
+  method: 'POST',
+  mode: 'no-cors',
+  headers: {
+    'Content-Type': 'text/plain'
+  },
+  body: JSON.stringify({
+    nama: document.querySelector('input[name=\"nama\"]').value,
+    email: document.querySelector('input[name=\"email\"]').value,
+    hp: document.querySelector('input[name=\"hp\"]').value,
+    Culinary: scores.Culinary,
+    Fashion: scores.Fashion,
+    Techno: scores.Techno,
+    Health: scores.Health,
+    Edu: scores.Edu
+  })
+});
 
   document.getElementById('result').style.display='block';
   new Chart(chart,{type:'bar',data:{

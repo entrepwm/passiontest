@@ -1,114 +1,131 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Passion Test Siswa</title>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <style>
-    body { font-family: Arial, sans-serif; background:#f5f7fa; margin:0; padding:0; }
-    header, footer { text-align:center; margin:0; padding:0; }
-    header img { max-width:90%; height:auto; display:block; margin:0 auto; }
-    footer img { max-width:80%; height:auto; display:block; margin:40px auto 20px; }
-    .container { max-width:800px; margin:0 auto 40px; background:#fff; padding:30px; border-radius:12px; box-shadow:0 10px 30px rgba(0,0,0,0.1); }
-    h1 { text-align:center; }
-    .question { margin-bottom:25px; }
-    .question h3 { margin-bottom:10px; }
-    label { display:block; margin:6px 0; cursor:pointer; }
-    input[type="text"], input[type="email"], input[type="tel"] { width:100%; padding:10px; margin-top:6px; border-radius:6px; border:1px solid #ccc; }
-    button { background:#2563eb; color:#fff; border:none; padding:12px 20px; border-radius:8px; font-size:16px; cursor:pointer; }
-    button:hover { background:#1e4ed8; }
-    #result { margin-top:40px; display:none; }
-    canvas { max-width:100%; }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Passion Test Siswa</title>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+body { font-family: Arial, sans-serif; background:#f5f7fa; margin:0; }
+header img, footer img { display:block; margin:0 auto; }
+.container {
+  max-width:800px;
+  margin:10px auto 40px;
+  background:#fff;
+  padding:30px;
+  border-radius:12px;
+  box-shadow:0 10px 30px rgba(0,0,0,.1);
+}
+.question { margin-bottom:25px; }
+label { display:block; margin:6px 0; cursor:pointer; }
+button {
+  background:#2563eb; color:#fff; border:none;
+  padding:12px 20px; border-radius:8px; font-size:16px;
+}
+</style>
 </head>
+
 <body>
 
-<header>
-  <img src="1.png" alt="Entrepreneurship Study Program">
+<header style="padding:6px 0;">
+  <img src="1.png" style="max-width:90%;">
 </header>
 
 <div class="container">
-  <h1>Passion Test Siswa</h1>
-  <p style="text-align:center">Pilih satu jawaban yang paling menggambarkan diri kamu.</p>
+<h1 style="text-align:center;">Passion Test Siswa</h1>
+<p>Pilih satu jawaban yang paling menggambarkan diri kamu.</p>
 
-  <form id="passionForm">
+<form id="passionForm">
 
-    <div class="question">
-      <h3>Data Diri</h3>
-      <label>Nama Lengkap
-        <input type="text" name="nama" required>
-      </label>
-      <label>Email
-        <input type="email" name="email" required placeholder="nama@email.com">
-      </label>
-      <label>Nomor HP / WhatsApp
-        <input type="tel" name="hp" required placeholder="08xxxxxxxxxx">
-      </label>
-    </div>
-
-    <div id="questions"></div>
-
-    <button type="submit">Lihat Hasil</button>
-  </form>
-
-  <div id="result">
-    <h2 style="text-align:center">Hasil Passion Kamu</h2>
-    <canvas id="chart"></canvas>
-  </div>
+<!-- DATA DIRI -->
+<div class="question">
+  <h3>Data Diri</h3>
+  <input name="nama" placeholder="Nama Lengkap" required style="width:100%;padding:10px"><br><br>
+  <input name="email" type="email" placeholder="Email" required style="width:100%;padding:10px"><br><br>
+  <input name="hp" placeholder="Nomor HP / WhatsApp" required style="width:100%;padding:10px">
 </div>
 
-<footer>
-  <img src="2.png" alt="One Degree One Startup">
+<!-- QUESTIONS -->
+<div id="questions"></div>
+
+<button type="submit">Lihat Hasil</button>
+</form>
+
+<div id="result" style="display:none;margin-top:40px;">
+  <h2>Hasil Passion Kamu</h2>
+  <canvas id="chart"></canvas>
+</div>
+</div>
+
+<footer style="margin:40px 0;">
+  <img src="2.png" style="max-width:80%;">
 </footer>
 
 <script>
-document.getElementById('passionForm').addEventListener('submit', function(e) {
+const questionsData = [
+  { q:"1. Kalau weekend kamu paling sering…", o:["Kulineran","Fashion","Gaming","Olahraga","Belajar"] },
+  { q:"2. Uang tambahan paling sering buat…", o:["Makan","Baju","Gadget","Skincare","Buku"] },
+  { q:"3. FYP kamu isinya…", o:["Food","OOTD","Tech","Health","Edu"] },
+  { q:"4. Di tongkrongan kamu biasanya…", o:["Cari makan","Komentarin style","Ngurus gadget","Ingatkan sehat","Jadi penjelas"] },
+  { q:"5. Konten favorit kamu…", o:["Kuliner","Fashion","Tech","Wellness","Edukasi"] },
+  { q:"6. Kata teman kamu itu…", o:["Food hunter","Stylish","Techy","Healthy","Komunikatif"] },
+  { q:"7. Booth favorit di event…", o:["F&B","Fashion","Startup","Health","Education"] },
+  { q:"8. Yang bikin lupa waktu…", o:["Masak","Mix outfit","Game","Workout","Diskusi"] },
+  { q:"9. Mau dikenal sebagai…", o:["Food creator","Fashion creator","Tech creator","Health creator","Edu creator"] },
+  { q:"10. Kalau bebas mau ngapain…", o:["Eksperimen makanan","Desain","Bangun app","Self care","Ngajar"] }
+];
+
+const map = ["Culinary","Fashion","Techno","Health","Edu"];
+
+function shuffle(a){return [...a].sort(()=>Math.random()-0.5);}
+
+const qBox = document.getElementById("questions");
+
+questionsData.forEach((q,i)=>{
+  let html = `<div class="question"><h3>${q.q}</h3>`;
+  shuffle(q.o).forEach((opt,idx)=>{
+    html += `<label>
+      <input type="radio" name="q${i}" value="${map[idx]}" required> ${opt}
+    </label>`;
+  });
+  html += `</div>`;
+  qBox.innerHTML += html;
+});
+
+document.getElementById("passionForm").addEventListener("submit", e=>{
   e.preventDefault();
 
-  const scores = { Culinary:0, Fashion:0, Techno:0, Health:0, Edu:0 };
-  const map = { A:'Culinary', B:'Fashion', C:'Techno', D:'Health', E:'Edu' };
-
-  questionsData.forEach((_, i) => {
-    const answer = document.querySelector(`input[name=q${i}]:checked`).value;
-    scores[map[answer]]++;
+  let score={Culinary:0,Fashion:0,Techno:0,Health:0,Edu:0};
+  questionsData.forEach((_,i)=>{
+    const v=document.querySelector(`input[name=q${i}]:checked`).value;
+    score[v]++;
   });
 
-  const payload = {
-    nama: document.querySelector('input[name="nama"]').value,
-    email: document.querySelector('input[name="email"]').value,
-    hp: document.querySelector('input[name="hp"]').value,
-    Culinary: scores.Culinary,
-    Fashion: scores.Fashion,
-    Techno: scores.Techno,
-    Health: scores.Health,
-    Edu: scores.Edu
-  };
-
-  fetch('https://script.google.com/macros/s/AKfycbyWhaNFLabF6i6skm4RX1DUCsYyp6B3I0ieBKeg37_Yf2Hj1Mzg-st56Xnqqk-wwubbzw/exec', {
-    method: 'POST',
-    mode: 'no-cors',
-    headers: {
-      'Content-Type': 'application/json' // ✅ CRITICAL FIX
-    },
-    body: JSON.stringify(payload)
+  fetch("https://script.google.com/macros/s/AKfycbyWhaNFLabF6i6skm4RX1DUCsYyp6B3I0ieBKeg37_Yf2Hj1Mzg-st56Xnqqk-wwubbzw/exec",{
+    method:"POST",
+    headers:{ "Content-Type":"application/json" },
+    body:JSON.stringify({
+      nama:passionForm.nama.value,
+      email:passionForm.email.value,
+      hp:passionForm.hp.value,
+      ...score
+    })
   });
 
-  document.getElementById('result').style.display = 'block';
+  document.getElementById("result").style.display="block";
 
-  new Chart(document.getElementById('chart'), {
-    type: 'bar',
-    data: {
-      labels: ['Culinary Art', 'Fashion & Innovation', 'Technopreneur', 'Health & Beauty', 'Edupreneur'],
-      datasets: [{ data: Object.values(scores).map(v => Math.round(v / 10 * 100)) }]
+  new Chart(chart,{
+    type:"bar",
+    data:{
+      labels:Object.keys(score),
+      datasets:[{data:Object.values(score).map(v=>v*10)}]
     },
-    options: { scales: { y: { beginAtZero: true, max: 100 } } }
+    options:{scales:{y:{beginAtZero:true,max:100}}}
   });
 });
 </script>
+
 </body>
 </html>
-
-
-
-

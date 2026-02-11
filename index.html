@@ -258,16 +258,6 @@ document.getElementById('passionForm').onsubmit=e=>{
     scores[map[document.querySelector(`input[name="q${i}"]:checked`).value]]++;
   });
 
-const formData = new URLSearchParams();
-formData.append('nama', document.querySelector('input[name="nama"]').value);
-formData.append('email', document.querySelector('input[name="email"]').value);
-formData.append('hp', document.querySelector('input[name="hp"]').value);
-formData.append('Culinary', scores.Culinary);
-formData.append('Fashion', scores.Fashion);
-formData.append('Techno', scores.Techno);
-formData.append('Health', scores.Health);
-formData.append('Edu', scores.Edu);
-
 const params = new URLSearchParams();
 params.append('nama', document.querySelector('input[name="nama"]').value);
 params.append('email', document.querySelector('input[name="email"]').value);
@@ -285,6 +275,13 @@ fetch('https://script.google.com/macros/s/AKfycby2Ak81apzKaKf3MRXX3fB-tgfMrBzltb
     'Content-Type': 'application/x-www-form-urlencoded'
   },
   body: params.toString(),
+})
+.then(res => res.text())
+.then(data => {
+  console.log("Server response:", data);
+})
+.catch(err => {
+  console.error("Error:", err);
 });
 
   document.getElementById('result').style.display='block';

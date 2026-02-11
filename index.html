@@ -268,24 +268,20 @@ formData.append('Techno', scores.Techno);
 formData.append('Health', scores.Health);
 formData.append('Edu', scores.Edu);
 
-const params = new URLSearchParams({
-  nama: document.querySelector('input[name="nama"]').value,
-  email: document.querySelector('input[name="email"]').value,
-  hp: document.querySelector('input[name="hp"]').value,
-  Culinary: scores.Culinary,
-  Fashion: scores.Fashion,
-  Techno: scores.Techno,
-  Health: scores.Health,
-  Edu: scores.Edu
-});
-  
+const params = new URLSearchParams();
+params.append('nama', document.querySelector('input[name="nama"]').value);
+params.append('email', document.querySelector('input[name="email"]').value);
+params.append('hp', document.querySelector('input[name="hp"]').value);
+params.append('Culinary', scores.Culinary);
+params.append('Fashion', scores.Fashion);
+params.append('Techno', scores.Techno);
+params.append('Health', scores.Health);
+params.append('Edu', scores.Edu);
+
+
 fetch('https://script.google.com/macros/s/AKfycbzvDpz6Ceni9mf5rgzrHu5OOVDn0sr-Gb0VcE-pAwi-1TTNg48LhzCIaY69APPfY1M/exec', {
   method: 'POST',
-  mode: 'no-cors',
-  headers: {
-    'Content-Type': 'application/x-www-form-urlencoded'
-  },
-  body: JSON.stringify({ nama: document.querySelector('input[name=\"nama\"]').value, email: document.querySelector('input[name=\"email\"]').value, hp: document.querySelector('input[name=\"hp\"]').value, Culinary: scores.Culinary, Fashion: scores.Fashion, Techno: scores.Techno, Health: scores.Health, Edu: scores.Edu
+  body: params,
 })
     });
 
